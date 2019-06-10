@@ -5,9 +5,8 @@ project (Movaic)
 set (Tutorial_VERSION_MAJOR 0)
 set (Tutorial_VERSION_MINOR 1)
 
-# Packages required to build project.
-find_package( OpenCV REQUIRED )
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-add_executable(Movaic main.cpp)
-
-target_link_libraries( Movaic ${OpenCV_LIBS} )
+add_subdirectory(movaic)
