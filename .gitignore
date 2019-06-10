@@ -1,5 +1,7 @@
-# Ignored CMake Files
+# Ignore Binary File
+bin/*
 
+# Ignored CMake Files
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles
