@@ -1,12 +1,12 @@
-cmake_minimum_required (VERSION 2.6)
-project (Movaic)
+cmake_minimum_required(VERSION 3.14)
+project(moviac)
 
-# The version number.
-set (Tutorial_VERSION_MAJOR 0)
-set (Tutorial_VERSION_MINOR 1)
+set(CMAKE_CXX_STANDARD 14)
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+# Packages required to build project.
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
 
-add_subdirectory(movaic)
+add_executable(moviac main.cpp)
+
+target_link_libraries(moviac ${OpenCV_LIBS})
