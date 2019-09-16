@@ -7,6 +7,6 @@ set(CMAKE_CXX_STANDARD 14)
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-add_executable(moviac main.cpp)
+add_executable(moviac main.cpp util.cpp util.h)
 
 target_link_libraries(moviac ${OpenCV_LIBS})
