@@ -1,7 +1,5 @@
 #include "opencv2/opencv.hpp"
-#include <iostream>
-#include <unordered_map>
-#include <stdint.h>
+#include <random>
 
 using namespace std;
 using namespace cv;
@@ -10,7 +8,7 @@ using namespace cv;
 #define KMEANATTEMPTS 5
 
 inline Vec3b
-getLargestKMean(Mat section, int numClusters) {
+getLargestKMean(const Mat &section, int numClusters) {
 
     Vec3b color;
     Mat samples = section.reshape(0, 1); //section.rows * section.cols, 3, CV_32F);
@@ -18,8 +16,8 @@ getLargestKMean(Mat section, int numClusters) {
     Mat center;
     Mat labels;
 
-    kmeans(samples, numClusters, labels, TermCriteria(CV_TERMCRIT_ITER | CV_TERMCRIT_EPS,
-                                                      10000, 0.0001), KMEANATTEMPTS, KMEANS_PP_CENTERS, center);
+    unsigned int flags = (unsigned) CV_TERMCRIT_ITER | (unsigned) CV_TERMCRIT_EPS;
+    kmeans(samples, numClusters, labels, TermCriteria(flags, 10000, 0.0001), KMEANATTEMPTS, KMEANS_PP_CENTERS, center);
 
     int cluster_idx = labels.at<int>(0, 0);
     color = center.at<Vec3b>(cluster_idx);
@@ -28,6 +26,11 @@ getLargestKMean(Mat section, int numClusters) {
 }
 
 int main() {
+
+    // Init random number generator.
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_int_distribution<int> dist(0, 10);
 
     // Load the video
     VideoCapture cap("./test_files/movies/test_video.mp4");
@@ -74,11 +77,11 @@ int main() {
         for (int x = 0; x < width; x += subSectionSize) {
 
             Mat subsection = poster(Range(y, y + subSectionSize - 1), Range(x, x + subSectionSize - 1));
-            Vec3b color = getLargestKMean(subsection);
+            Vec3b color = getLargestKMean(subsection, 1);
 
             vector<int> indices;
 
-            uint32_t key = (color[0] << 16) + (color[1] << 8) + (color[2]);
+            uint32_t key = ((unsigned) color[0] << 16) + ((unsigned) color[1] << 8) + (unsigned) color[2];
 
             if (frameMap.find(key) != frameMap.end()) {
                 indices = frameMap[key];
@@ -96,12 +99,12 @@ int main() {
             }
 
             Mat closestFrame;
-            int chosenFrame = indices[rand() % 10] * FRAMEINTERVAL;
+            int chosenFrame = indices[dist(mt)] * FRAMEINTERVAL;
 
             if (frameCache.find(chosenFrame) != frameCache.end())
                 closestFrame = frameCache[chosenFrame];
             else {
-                cap.set(CAP_PROP_POS_FRAMES, indices[rand() % 10] * FRAMEINTERVAL);
+                cap.set(CAP_PROP_POS_FRAMES, indices[dist(mt)] * FRAMEINTERVAL);
                 cap >> closestFrame;
                 frameCache[chosenFrame] = closestFrame;
             }

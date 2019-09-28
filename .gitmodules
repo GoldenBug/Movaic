@@ -1,0 +1,4 @@
+[submodule "external/HealthBar"]
+	path = external/HealthBar
+	url = https://github.com/GoldenBug/HealthBar
+	branch = master
