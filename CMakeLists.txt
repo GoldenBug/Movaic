@@ -3,9 +3,15 @@ project(moviac)
 
 set(CMAKE_CXX_STANDARD 14)
 
+set(lib_dest "lib/standardese")
+set(include_dest "include")
+set(tool_dest "bin")
+
 # Packages required to build project.
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
+
+include(external/external.cmake)
 
 add_executable(moviac main.cpp util.cpp util.h)
 
