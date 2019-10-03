@@ -3,7 +3,6 @@ project(moviac)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(lib_dest "lib/standardese")
 set(include_dest "include")
 set(tool_dest "bin")
 
@@ -16,3 +15,4 @@ include(external/external.cmake)
 add_executable(moviac main.cpp util.cpp util.h)
 
 target_link_libraries(moviac ${OpenCV_LIBS})
+target_link_libraries(moviac libHealthBar)

@@ -1,5 +1,6 @@
 #include "opencv2/opencv.hpp"
 #include <random>
+#include <HealthBarAPI.h>
 
 using namespace std;
 using namespace cv;
@@ -43,8 +44,10 @@ int main() {
 
     Mat frameData(1770, 3, CV_32F);
 
+    std::string currentOp = "Analyzing movie frames";
     for (int frameNum = 0; frameNum < 2000; ++frameNum) {
-
+        setBarPositionBottom(false);
+        writeStatusBar((double) frameNum, (double) 2000, currentOp);
         Mat frame;
         cap.set(CAP_PROP_POS_FRAMES, frameNum * FRAMEINTERVAL);
         cap >> frame;
@@ -58,7 +61,7 @@ int main() {
 
         Vec3b color;
 
-        color = getLargestKMean(smaller, 1);
+        color = getLargestKMean(smaller, 3);
 
         frameData.at<Vec3b>(frameNum, 0) = color;
 
