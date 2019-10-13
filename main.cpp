@@ -36,13 +36,14 @@ analyzeMovieFrames(VideoCapture &cap, uint32_t frameInterval, Mat &frameData,
                    unordered_map<uint32_t, Mat> &frameCache) {
 
     int totalNumberFrames = cap.get(CV_CAP_PROP_FRAME_COUNT);
-    frameData = Mat(totalNumberFrames / frameInterval, 3, CV_32F);
+    uint32_t numFrames = totalNumberFrames / frameInterval;
+    frameData = Mat(numFrames, 3, CV_32F);
 
-    for (int frameNum = 0; frameNum < totalNumberFrames; frameNum += frameInterval) {
+    for (int currFrame = 0; currFrame < numFrames; currFrame++) {
         setBarPositionBottom(false);
-        writeStatusBar((double) frameNum, (double) totalNumberFrames, "Analyzing movie frames");
+        writeStatusBar((double) currFrame, (double) numFrames, "Analyzing movie frames");
 
-        cap.set(CAP_PROP_POS_FRAMES, frameNum * frameInterval);
+        cap.set(CAP_PROP_POS_FRAMES, currFrame * frameInterval);
 
         Mat frame;
         Mat smaller;
@@ -51,11 +52,10 @@ analyzeMovieFrames(VideoCapture &cap, uint32_t frameInterval, Mat &frameData,
         resize(frame, smaller, Size(SUBSECTIONSIZE, SUBSECTIONSIZE));
 
         Vec3b color = getLargestKMean(smaller);
-        frameData.at<float>(frameNum, 0) = color[0];
-        frameData.at<float>(frameNum, 1) = color[1];
-        frameData.at<float>(frameNum, 2) = color[2];
-
-        frameCache[frameNum / frameInterval] = smaller;
+        frameData.at<float>(currFrame, 0) = color[0];
+        frameData.at<float>(currFrame, 1) = color[1];
+        frameData.at<float>(currFrame, 2) = color[2];
+        frameCache[currFrame] = smaller;
     }
 
     return;
@@ -65,7 +65,7 @@ int
 main(int argc, char *argv[]) {
 
     // Load the video
-    VideoCapture cap("./test_files/movies/test_video.mp4");
+    VideoCapture cap("./test_files/movies/Totoro.mp4");
 
     // If the video could not be loaded.
     if (!cap.isOpened()) {
@@ -74,7 +74,7 @@ main(int argc, char *argv[]) {
     }
 
     Mat frameData;
-    uint32_t frameInterval = 1;
+    uint32_t frameInterval = 20;
     unordered_map<uint32_t, Mat> frameCache;
 
     analyzeMovieFrames(cap, frameInterval, frameData, frameCache);
@@ -110,9 +110,9 @@ main(int argc, char *argv[]) {
             query.push_back(color[1]);
             query.push_back(color[2]);
 
-            kdtree.knnSearch(query, indices, dists, 1);
+            kdtree.knnSearch(query, indices, dists, 10);
 
-            Mat closestFrame = frameCache[indices[0]];
+            Mat closestFrame = frameCache[indices[rand() % 10]];
 
             closestFrame.copyTo(poster(Rect(x, y, closestFrame.cols, closestFrame.rows)));
 
