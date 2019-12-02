@@ -21,18 +21,21 @@ These instructions detail the required packages and build process for this appli
 These instructions were tested on Ubuntu 18.04 "Bionic Beaver".
 
 OpenCV libraries must be installed.
-Instructions to build and install OpenCV can be found [here.](https://docs.opencv.org/2.4/doc/tutorials/introduction/linux_install/linux_install.html) 
+
+'''
+apt-get install libopencv-dev
+'''
 
 First the progress bar submodule needs to be fetched and updated.
+
 '''
 $ git submodule init
-$ git submodule update --force --recursive --init --remote
+$ git submodule update
 '''
 
-
 ### Required Modules
-* CMake version > 13.13
-* OpenCV
+* CMake version 13.10
+* OpenCV version 3.2.0
 
 ## Future Features
 * Specify Configurations in a File
