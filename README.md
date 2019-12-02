@@ -26,7 +26,7 @@ OpenCV libraries must be installed.
 $ apt-get install libopencv-dev
 ```
 
-First the progress bar submodule needs to be fetched and updated.
+The progress bar submodule needs to be fetched and updated.
 
 ```shell
 $ git submodule init
