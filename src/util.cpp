@@ -1,15 +1,14 @@
-#include "opencv2/opencv.hpp"
-#include <random>
-#include "include/HealthBarAPI.h"
-#include <stdint.h>
+//
+// Created by ponto on 9/3/19.
+//
 
-using namespace std;
-using namespace cv;
+#include "util.h"
+#include "include/HealthBarAPI.h"
 
 #define SUBSECTIONSIZE 100
-//#define DEBUG
 
-Vec3b getLargestKMean(Mat section) {
+Vec3b
+getLargestKMean(Mat section) {
 
     Mat samples;
     section.convertTo(samples, CV_32F);
@@ -61,39 +60,10 @@ analyzeMovieFrames(VideoCapture &cap, uint32_t frameInterval, Mat &frameData,
     return;
 }
 
-int
-main(int argc, char *argv[]) {
-
-    // Load the video
-    VideoCapture cap("./test_files/movies/Totoro.mp4");
-
-    // If the video could not be loaded.
-    if (!cap.isOpened()) {
-        cout << "Error opening video stream or file.\n" << endl;
-        return -1;
-    }
-
-    Mat frameData;
-    uint32_t frameInterval = 20;
-    unordered_map<uint32_t, Mat> frameCache;
-
-    analyzeMovieFrames(cap, frameInterval, frameData, frameCache);
-
-    const int width = 12000;
-    const int height = 18000;
-
-    Mat poster = imread("./test_files/posters/test_poster.jpg", CV_LOAD_IMAGE_COLOR);
-    resize(poster, poster, Size(width, height));
+void substituteFrames(Mat frameData, int width, int height, Mat poster, unordered_map<uint32_t, Mat> &frameCache) {
 
     flann::KDTreeIndexParams indexParams;
     flann::Index kdtree(Mat(frameData).reshape(1), indexParams);
-
-#ifdef DEBUG
-    namedWindow( "Frame", WINDOW_AUTOSIZE );
-    namedWindow( "Mean_Color", WINDOW_AUTOSIZE );
-    namedWindow( "b", WINDOW_AUTOSIZE );
-    namedWindow( "c", WINDOW_AUTOSIZE );
-#endif
 
     for (int y = 0; y < height; y += SUBSECTIONSIZE) {
         for (int x = 0; x < width; x += SUBSECTIONSIZE) {
@@ -116,29 +86,7 @@ main(int argc, char *argv[]) {
 
             closestFrame.copyTo(poster(Rect(x, y, closestFrame.cols, closestFrame.rows)));
 
-#ifdef DEBUG
-            Mat temp_frame = subsection.clone();
-            temp_frame.setTo(Scalar(color[0], color[1], color[2]));
-            color = frameData.at<Vec3b>(indices[0]);
-            Mat temp2_frame = subsection.clone();
-            temp2_frame.setTo(Scalar(color[0], color[1], color[2]));
-            imshow( "Frame", subsection);
-            imshow( "Mean_Color", temp_frame);
-            imshow( "b", closestFrame);
-            imshow( "c", temp2_frame);
-            waitKey(100);
-#endif
         }
     }
 
-    imwrite("./test_files/movies/output.jpg", poster);
-    cout << "done" << endl;
-
-    // When everything done, release the video capture object
-    cap.release();
-
-    // Closes all the frames
-    destroyAllWindows();
-
-    return 0;
 }

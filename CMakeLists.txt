@@ -10,7 +10,7 @@ add_subdirectory(external/HealthBar)
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-add_executable(moviac main.cpp util.cpp util.h)
+add_executable(moviac src/main.cpp src/util.cpp src/util.h)
 
 target_link_libraries(moviac ${OpenCV_LIBS})
 target_link_libraries(moviac healthbar)
