@@ -2,3 +2,6 @@
 	path = external/HealthBar
 	url = https://github.com/GoldenBug/HealthBar
 	branch = master
+[submodule "boost-cmake"]
+	path = external/boost-cmake
+	url = https://github.com/Orphis/boost-cmake.git
