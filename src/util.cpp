@@ -1,7 +1,3 @@
-//
-// Created by ponto on 9/3/19.
-//
-
 #include "util.h"
 #include "include/HealthBarAPI.h"
 
@@ -57,6 +53,7 @@ analyzeMovieFrames(VideoCapture &cap, uint32_t frameInterval, Mat &frameData,
         frameCache[currFrame] = smaller;
     }
 
+    writeStatusBar((double) numFrames, (double) numFrames, "Analyzing movie frames");
     return;
 }
 
@@ -66,9 +63,11 @@ void substituteFrames(Mat frameData, int width, int height, Mat poster, unordere
     flann::Index kdtree(Mat(frameData).reshape(1), indexParams);
 
     for (int y = 0; y < height; y += SUBSECTIONSIZE) {
+
+        setBarPositionBottom(false);
+        writeStatusBar((double) y, (double) height, "Replacing movie frames");
+
         for (int x = 0; x < width; x += SUBSECTIONSIZE) {
-            setBarPositionBottom(false);
-            writeStatusBar((double) y, (double) height, "Replacing movie frames");
 
             Mat subsection = poster(Range(y, y + SUBSECTIONSIZE - 1), Range(x, x + SUBSECTIONSIZE - 1)).clone();
             Vec3b color = getLargestKMean(subsection);
@@ -89,4 +88,5 @@ void substituteFrames(Mat frameData, int width, int height, Mat poster, unordere
         }
     }
 
+    writeStatusBar((double) height, (double) height, "Replacing movie frames");
 }
