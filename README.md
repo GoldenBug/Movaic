@@ -17,7 +17,7 @@ Then using a K-D Tree the application searches for the nearest neighbor match of
 
 ## Using the application
 
-Using the application from the command line requires the 3 (mandatory) arguments below.
+Using the application from the command line requires the 3 (mandatory) arguments below, not including the help command.
 
 ```
 Options:
@@ -31,7 +31,7 @@ Options:
 
 ## Building From Source
 
-These instructions detail the required packages and build process for this application.
+These instructions detail the required packages and build process for this application.  
 These instructions were tested on Ubuntu 18.04 "Bionic Beaver".
 
 ### Required Dependencies (External)
