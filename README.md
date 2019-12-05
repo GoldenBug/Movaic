@@ -1,6 +1,6 @@
 # Movaic
 
-Movaic (Movie Mosaic) is a command line application that can be used to create picture mosaics using a source image and a video clip.
+Movaic (Movie Mosaic) is a command-line application that can be used to create picture mosaics using a source image and a video clip.
  
 <p align="center">
   <img width="535" height="800" src="https://github.com/GoldenBug/ReadMe_Asset_Host/blob/master/Movaic_Assets/Output_Example.gif">
@@ -15,18 +15,38 @@ algorithm to find the mean of that area.
 
 Then using a K-D Tree the application searches for the nearest neighbor match of the image subsection and replaces that subsection with the correlating video frame. It does this for every subsection and once finished outputs the newly created image. 
 
+## Using the application
+
+Using the application from the command line requires the 3 (mandatory) arguments below.
+
+```
+Options:
+  -h [ --help ]         Print help messages
+  -p [ --poster ] arg   Path of the input poster that will be used as reference
+                        to create the output
+  -v [ --video ] arg    Path of movie that will be used as a source of 
+                        replacement frames
+  -o [ --output ] arg   Path and filename of the output poster
+```
+
 ## Building From Source
 
 These instructions detail the required packages and build process for this application.
 These instructions were tested on Ubuntu 18.04 "Bionic Beaver".
 
-OpenCV libraries must be installed.
+### Required Dependencies (External)
+* CMake version 13.10
+* OpenCV version 3.2.0
 
-```shell
-$ apt-get install libopencv-dev
-```
+### Downloaded Dependencies (Internal)
+These dependencies are required but should be downloaded automatically as git submodules linked by cmake.
 
-The progress bar submodule needs to be fetched and updated.
+* HealthBar
+* Boost (C++)
+
+### Build Commands
+
+The progress bar submodule and boost-fetching submodule needs to be fetched and updated.
 
 ```shell
 $ git submodule init
@@ -42,11 +62,6 @@ then run make using the generated cmake files.
 ```shell
 $ make
 ```
-
-
-### Required Modules
-* CMake version 13.10
-* OpenCV version 3.2.0
 
 ## Future Features
 * Specify Configurations in a File
